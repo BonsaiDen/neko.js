@@ -1,0 +1,31 @@
+{
+    "name": "neko",
+    "version": "1.0.0",
+    "description": "Classes so easy, cats could use them!",
+    "homepage": "https://github.com/BonsaiDen/neko.js",
+    "author": "Ivo Wetzel <ivo.wetzel@googlemail.com>",
+    
+    "keywords": [
+        "classes",
+        "class",
+        "oop",
+        "cats"
+    ],
+    
+    "engines" : {
+        "node": ">=0.1.9"
+    },
+    
+    "main": "neko",
+    
+    "repository": {
+        "type" : "git",
+        "url" : "http://github.com/BonsaiDen/neko.js.git"
+    },
+    
+    "licenses": [{
+        "type": "MIT",
+        "url": "http://github.com/BonsaiDen/neko.js/raw/master/LICENSE"
+    }]
+}
+
