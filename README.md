@@ -1,5 +1,5 @@
-neko.js - Classes so easy, cats could use them!
-===============================================
+neko.js - JavaScript classes for cats!
+======================================
 
 **neko.js Features**
 
