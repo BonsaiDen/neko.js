@@ -24,14 +24,22 @@ function Class(ctor) {
     function clas() {
         ctor.apply(this, arguments);
     }
-    function wrap(method) {
-        return function(){return clas.call.apply(method, arguments);};
+    function wrap(object, caller) {
+        return function() {
+            return object.apply(caller, arguments);
+        };
     }
-    clas.init = wrap(ctor);
-    clas.extend = function(methods) {
-        for(var f in methods) {
-            if (methods.hasOwnProperty(f)) {
-                clas[f] = f[0] != '$' ? wrap(clas.prototype[f] = methods[f]) : methods[f];
+    clas.init = wrap(clas.call, ctor);
+    clas.extend = function(exts) {
+        for(var e in exts) {
+            if (exts.hasOwnProperty(e)) {
+                var isStatic = e[0] === '$', value = exts[e];
+                if (typeof value === 'function') {
+                    clas[e] = isStatic ? wrap(value, clas) : wrap(clas.call, clas.prototype[e] = value);
+                
+                } else if (isStatic) {
+                    clas[e] = value;
+                }
             }
         }
         return clas;

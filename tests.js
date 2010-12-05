@@ -27,19 +27,35 @@ assert.equal(bee.$info, undefined, 'bee should not have a method $info');
 var Balloon = Class(function(size, altitude) {
     this.size = size;
     this.altitude = altitude;
+    Balloon.$list.push(this);
 
 }).extend({
     fly: function() {
         return this.altitude;
+    },
+    
+    invalidList: [], // invalid, class variables need to start with a $
+    
+    $list: [],
+    
+    $count: function() {
+        return this.$list.length;
     }
 });
 
 var hotAirBalloon = new Balloon(50, 128);
 assert.equal(hotAirBalloon.size, 50, 'hotAirBalloon has the wrong size');
 assert.equal(hotAirBalloon.altitude, 128, 'hotAirBalloon is at the wrong altitude');
-assert.equal(hotAirBalloon.fly(), 128, 'hotAirBalloon.fly() tells the wrong altitude')
+assert.equal(hotAirBalloon.fly(), 128, 'hotAirBalloon.fly() tells the wrong altitude');
 assert.equal(hotAirBalloon.$info, undefined, 'hotAirBalloon should not have a method $info');
-assert.equal(Balloon.$info, undefined, 'Class Balloon should not have a static method $info');
+assert.equal(hotAirBalloon.invalidList, undefined, 'hotAirBalloon should not have a property variable invalidList');
+assert.equal(hotAirBalloon.$list, undefined, 'hotAirBalloon should not have a property $list');
+
+assert.equal(Balloon.$info, undefined, 'Class Balloon should not have a static inherited method $info');
+assert.notEqual(Balloon.$list, undefined, 'Class Balloon should not have a static property $list');
+assert.equal(Balloon.invalidList, undefined, 'Class Balloon should not have a property invalidList');
+assert.equal(Balloon.$list.length, 1, 'Static property $list of class Balloon should have a length of 1');
+assert.equal(Balloon.$count(), Balloon.$list.length, 'Static method $count of class Balloon should return the length of the static property $list');
 
 
 // Single Inherited Class ------------------------------------------------------

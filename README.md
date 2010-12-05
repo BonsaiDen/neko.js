@@ -4,7 +4,7 @@ neko.js - JavaScript classes for cats!
 **neko.js Features**
 
  - Multiple inheritance
- - Static methods
+ - Static methods and properties
  - Really fast creation of instances
  - Ability to call unbound methods
 
@@ -33,6 +33,8 @@ neko.js - JavaScript classes for cats!
         this.furType = function() {
             return fur;
         }
+        
+        Cat.$list.push(this); // push this instance into the static list
     
     }, Animal).extend({  // base classes
         meow: function() {
@@ -43,8 +45,14 @@ neko.js - JavaScript classes for cats!
             return this.color;
         },
         
+        $list: [], // let the Cat class keep track of the cats with a static property
+        
         $info: function(cat) { // static method of Cat, note the $ prefix
             return {name: cat.name, color: cat.color, fur: cat.furType()};
+        },
+        
+        $listCats: function() {
+            return this.$list; // this inside static methods refers to the class
         }
     });
 
@@ -64,4 +72,8 @@ neko.js - JavaScript classes for cats!
 
     > Cat.$info(kitten); // call the static method
     { name: 'Kitty', color: 'black', fur: 'soft' }
+
+    > Cat.$listCats() // list the instances contained in the static property
+    [ { name: 'Kitty', color: 'black', furType: [Function] } ]
+
 
