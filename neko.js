@@ -34,7 +34,7 @@ function Class(ctor) {
         for(var e in exts) {
             if (exts.hasOwnProperty(e)) {
                 var isStatic = e[0] === '$', value = exts[e];
-                if (typeof value === 'function') {
+                if (value instanceof Function) {
                     clas[e] = isStatic ? wrap(value, clas) : wrap(clas.call, clas.prototype[e] = value);
                 
                 } else if (isStatic) {
