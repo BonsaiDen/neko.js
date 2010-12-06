@@ -15,7 +15,7 @@ neko.js - JavaScript classes for cats!
     var Animal = Class(function(name) { // the constructor
         this.name = name; // an instance variable
 
-    }).extend({ // extending the class with some methods
+    }, { // extending the class with some methods
         speak: function(words) { // a simple method
             console.log(words);    
         }
@@ -34,9 +34,9 @@ neko.js - JavaScript classes for cats!
             return fur;
         }
         
-        Cat.$list.push(this); // push this instance into the static list
+        this.$list.push(this); // push this instance into the static list of Cat
     
-    }, Animal).extend({  // base classes
+    }, Animal, {  // base classes
         meow: function() {
             this.speak('Meow! My name is ' + this.name + '.'); // calling the inherited method
         },
@@ -45,7 +45,8 @@ neko.js - JavaScript classes for cats!
             return this.color;
         },
         
-        $list: [], // let the Cat class keep track of the cats with a static property
+        $list: [], // let the Cat class keep track of the cats, with a static property
+                   // static properties are shallow copies per class
         
         $info: function(cat) { // static method of Cat, note the $ prefix
             return {name: cat.name, color: cat.color, fur: cat.furType()};
@@ -73,7 +74,7 @@ neko.js - JavaScript classes for cats!
     > Cat.$info(kitten); // call the static method
     { name: 'Kitty', color: 'black', fur: 'soft' }
 
-    > Cat.$listCats() // list the instances contained in the static property
+    > kitten.$listCats() // get a list of the cats, by calling the static method
     [ { name: 'Kitty', color: 'black', furType: [Function] } ]
 
 

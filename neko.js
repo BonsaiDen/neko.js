@@ -29,23 +29,42 @@ function Class(ctor) {
             return object.apply(caller, arguments);
         };
     }
+    function inherit(e, value) {
+        var type = Object.prototype.toString.call(value).slice(8, -1);
+        if (e[0] === '$') {
+            if (type === 'Object') {
+                proto[e] = {};
+                for(var f in value) {
+                    proto[e][f] = value[f];
+                }
+            
+            } else {
+                proto[e] = type === 'Function' ? wrap(value, clas) : type === 'Array' ? value.slice() : value;
+            }
+            clas[e] = clas.prototype[e] = value;
+        
+        } else if (type === 'Function') {
+            clas[e] = wrap(clas.call, proto[e] = clas.prototype[e] = value);
+        }
+    }
+    
+    var proto = {};
     clas.init = wrap(clas.call, ctor);
     clas.extend = function(exts) {
-        for(var e in exts) {
-            if (exts.hasOwnProperty(e)) {
-                var isStatic = e[0] === '$', value = exts[e];
-                if (value instanceof Function) {
-                    clas[e] = isStatic ? wrap(value, clas) : wrap(clas.call, clas.prototype[e] = value);
-                
-                } else if (isStatic) {
-                    clas[e] = value;
+        if (exts instanceof Function) {
+            exts.extend(proto);
+        
+        } else {
+            for(var e in exts) {
+                if (exts.hasOwnProperty(e)) {
+                    inherit(e, exts[e]);
                 }
             }
         }
         return clas;
     };
     for(var i = 1, l = arguments.length; i < l; i++) {
-        clas.extend(arguments[i].prototype);
+        arguments[i].extend(clas);
     }
     return clas;
 }

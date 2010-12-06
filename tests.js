@@ -18,16 +18,18 @@ var Animal = Class(function(name) {
 });
 
 var bee = new Animal('Maja');
-assert.equal(bee.name, 'Maja', 'bee has wrong name');
-assert.equal(bee.speak('Willi!'), 'Willi!', 'bee said the wrong thing');
 assert.notEqual(Animal.$info, undefined, 'Class Animal should have a static method called $info');
 assert.equal(Animal.$info(bee), 'Maja', 'Class Animal static method $info returned the wrong value');
-assert.equal(bee.$info, undefined, 'bee should not have a method $info');
 
+assert.equal(bee.name, 'Maja', 'bee has wrong name');
+assert.equal(bee.speak('Willi!'), 'Willi!', 'bee said the wrong thing');
+assert.notEqual(bee.$info, undefined, 'bee should have a static method $info');
+
+var configObject = {'foo': 42};
 var Balloon = Class(function(size, altitude) {
     this.size = size;
     this.altitude = altitude;
-    Balloon.$list.push(this);
+    this.$list.push(this);
 
 }).extend({
     fly: function() {
@@ -38,24 +40,30 @@ var Balloon = Class(function(size, altitude) {
     
     $list: [],
     
+    $config:  {'color': 'blue', 'object': configObject},
+    
     $count: function() {
         return this.$list.length;
     }
 });
 
-var hotAirBalloon = new Balloon(50, 128);
-assert.equal(hotAirBalloon.size, 50, 'hotAirBalloon has the wrong size');
-assert.equal(hotAirBalloon.altitude, 128, 'hotAirBalloon is at the wrong altitude');
-assert.equal(hotAirBalloon.fly(), 128, 'hotAirBalloon.fly() tells the wrong altitude');
-assert.equal(hotAirBalloon.$info, undefined, 'hotAirBalloon should not have a method $info');
-assert.equal(hotAirBalloon.invalidList, undefined, 'hotAirBalloon should not have a property variable invalidList');
-assert.equal(hotAirBalloon.$list, undefined, 'hotAirBalloon should not have a property $list');
 
-assert.equal(Balloon.$info, undefined, 'Class Balloon should not have a static inherited method $info');
-assert.notEqual(Balloon.$list, undefined, 'Class Balloon should not have a static property $list');
+var hotAirBalloon = new Balloon(50, 128);
+assert.notEqual(Balloon.$count, undefined, 'Class Balloon should have a static method $count');
+assert.notEqual(Balloon.$list, undefined, 'Class Balloon should have a static property $list');
 assert.equal(Balloon.invalidList, undefined, 'Class Balloon should not have a property invalidList');
 assert.equal(Balloon.$list.length, 1, 'Static property $list of class Balloon should have a length of 1');
 assert.equal(Balloon.$count(), Balloon.$list.length, 'Static method $count of class Balloon should return the length of the static property $list');
+assert.equal(Balloon.$config.color, 'blue', 'Static property $conifg should be a shallow clone');
+assert.equal(Balloon.$config.object, configObject, 'Static property $config should be a shallow clone');
+
+assert.equal(hotAirBalloon.size, 50, 'hotAirBalloon has the wrong size');
+assert.equal(hotAirBalloon.altitude, 128, 'hotAirBalloon is at the wrong altitude');
+assert.equal(hotAirBalloon.fly(), 128, 'hotAirBalloon.fly() tells the wrong altitude');
+
+assert.notEqual(hotAirBalloon.$count, undefined, 'hotAirBalloon should have a static method $count');
+assert.notEqual(hotAirBalloon.$list, undefined, 'hotAirBalloon should have a static property $list');
+assert.equal(hotAirBalloon.invalidList, undefined, 'hotAirBalloon should not have a property invalidList');
 
 
 // Single Inherited Class ------------------------------------------------------
@@ -70,6 +78,7 @@ var Cat = Class(function(name, color) {
 });
 
 var kitty = new Cat('Meow', 'purple');
+assert.notEqual(kitty.speak, undefined, 'kitty should have a speak method');
 assert.equal(kitty.name, 'Meow', 'kitty has the wrong name');
 assert.equal(kitty.color, 'purple', 'kitty has the wrong color');
 assert.equal(kitty.meow(), 'My name is Meow and I\'m purple!', 'kitty.meow() says the wrong things');
@@ -86,10 +95,20 @@ var BalloonCat = Class(function(name, color, size, height) {
         return Cat.meow(this) + ' I\'m currently flying at ' + this.fly() + ' feet!';
     }
 });
+configObject.foo = 35;
+Balloon.$config.color = 'red';
 
 var flyingCat = new BalloonCat('Toro', 'orange', 20, 70);
+assert.notEqual(BalloonCat.$list, undefined, 'Class BalloonCat should have a static property $list');
+assert.notEqual(BalloonCat.$count, undefined, 'Class BalloonCat should have a static method $count');
+assert.equal(BalloonCat.$list.length, 1, 'Static property $list of class BalloonCat should have a length of 1');
+assert.equal(BalloonCat.$count(), 1, 'Static method $count of class BalloonCat should return 1');
+assert.equal(BalloonCat.$config.color, 'blue', 'Static property $conifg should be a shallow clone');
+assert.equal(BalloonCat.$config.object, configObject, 'Static property $conifg should be a shallow clone');
+
 assert.equal(flyingCat.name, 'Toro', 'flyingCat has the wrong name');
 assert.equal(flyingCat.color, 'orange', 'flyingCat has the wrong color');
+assert.notEqual(flyingCat.$list, undefined, 'flyingCat should have a static property $list');
 assert.equal(flyingCat.meow(),
              'My name is Toro and I\'m orange! I\'m currently flying at 70 feet!',
              'flyingcat.meow() says the wrong things');
