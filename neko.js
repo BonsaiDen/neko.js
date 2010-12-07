@@ -24,41 +24,36 @@ function Class(ctor) {
     function clas() {
         ctor.apply(this, arguments);
     }
-    function wrap(object, caller) {
+    function wrap(caller, object) {
+        object = object || clas.call;
         return function() {
             return object.apply(caller, arguments);
         };
     }
-    function inherit(e, value) {
-        var type = Object.prototype.toString.call(value).slice(8, -1);
-        if (e[0] === '$') {
-            if (type === 'Object') {
-                proto[e] = {};
-                for(var f in value) {
-                    proto[e][f] = value[f];
-                }
-            
-            } else {
-                proto[e] = type === 'Function' ? wrap(value, clas) : type === 'Array' ? value.slice() : value;
-            }
-            clas[e] = clas.prototype[e] = value;
-        
-        } else if (type === 'Function') {
-            clas[e] = wrap(clas.call, proto[e] = clas.prototype[e] = value);
-        }
-    }
     
     var proto = {};
-    clas.init = wrap(clas.call, ctor);
+    clas.init = wrap(ctor);
     clas.extend = function(exts) {
-        if (exts instanceof Function) {
-            exts.extend(proto);
+        if (exts instanceof Function) return exts.extend(proto);
         
-        } else {
-            for(var e in exts) {
-                if (exts.hasOwnProperty(e)) {
-                    inherit(e, exts[e]);
+        for(var e in exts) {
+            if (!exts.hasOwnProperty(e)) continue;
+            
+            var value = exts[e],
+                type = Object.prototype.toString.call(value).slice(8, -1);
+            
+            if (/^\$/.test(e)) {
+                proto[e] = type === 'Array' ? value.slice() : value;
+                if (type === 'Object') {
+                    proto[e] = {};
+                    for(var f in value) {
+                        proto[e][f] = value[f];
+                    }
                 }
+                clas[e] = clas.prototype[e] = type === 'Function' ? wrap(clas, value) : value;
+            
+            } else if (type === 'Function') {
+                clas[e] = wrap(proto[e] = clas.prototype[e] = value);
             }
         }
         return clas;
