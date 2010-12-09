@@ -21,7 +21,7 @@
 */
 
 function Class(ctor) {
-    ctor = ctor || function(){};
+    ctor = ctor || function() {};
     function clas() {
         ctor.apply(this, arguments);
     }
