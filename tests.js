@@ -113,3 +113,36 @@ assert.equal(flyingCat.meow(),
              'My name is Toro and I\'m orange! I\'m currently flying at 70 feet!',
              'flyingcat.meow() says the wrong things');
 
+
+// Templates -------------------------------------------------------------------
+var CuteThing = Class(function() {
+    this.cuteThingsDone = 0;
+
+}).extend({
+    cuteAction: function() {
+        this.cuteThingsDone++;
+        return this.doAction(); // abstract
+    }
+});
+
+var CuteLogger = Class().extend({
+    $log: function(str) {
+        console.log('CuteLog: ' + str);
+    }
+});
+assert.equal(CuteLogger.init instanceof Function, true, 'Class CuteLogger should have a implicit default constructor');
+
+// Just pass the class as the constructor
+var Kitten = Class(CuteThing, CuteLogger).extend({
+    doAction: function() {
+        return 'Doing some cute kitten thing!';
+    }
+});
+
+var kitten = new Kitten();
+assert.notEqual(Kitten.cuteAction, undefined, 'Class Kitten should inherit method cuteAction');
+assert.notEqual(Kitten.$log, undefined, 'Class Kitten should have a static method $log');
+assert.notEqual(Kitten.doAction, undefined, 'Class Kitten should implement doAction');
+assert.equal(kitten.cuteAction(), 'Doing some cute kitten thing!', 'kitten doAction returns the wrong value');
+assert.equal(kitten.cuteThingsDone, 1, 'kitten instance should have a cuteThingsDone count of 1');
+

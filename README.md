@@ -7,6 +7,7 @@ neko.js - JavaScript classes for cats!
  - Static methods and properties
  - Really fast creation of instances
  - Ability to call unbound methods
+ - Passing Classes as constructors
 
 
 **Creating some Classes**
@@ -77,4 +78,36 @@ neko.js - JavaScript classes for cats!
     > kitten.$listCats() // get a list of the cats, by calling the static method
     [ { name: 'Kitty', color: 'black', furType: [Function] } ]
 
+
+**More Tricks**
+
+    // Creating some kind of a template
+    var CuteThing = Class(function() {
+        this.cuteThingsDone = 0;
+    
+    }).extend({
+        cuteAction: function() {
+            this.cuteThingsDone++;
+            return this.doAction(); // doAction is abstract
+        }
+    });
+    
+    // Just pass the CuteThing class as the constructor
+    var Kitten = Class(CuteThing).extend({
+        doAction: function() {
+            return 'Doing some cute kitten thing!';
+        }
+    });
+    
+    var Puppy = Class(CuteThing).extend({
+        doAction: function() {
+            return 'Doing some cute puppy thing!';
+        }
+    });
+    
+    > new Kitten().cuteAction()
+    'Doing some cute kitten thing!'
+    
+    > new Puppy().cuteAction()
+    'Doing some cute puppy thing!'
 

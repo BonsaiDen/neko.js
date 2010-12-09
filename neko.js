@@ -21,6 +21,7 @@
 */
 
 function Class(ctor) {
+    ctor = ctor || function(){};
     function clas() {
         ctor.apply(this, arguments);
     }
@@ -58,7 +59,7 @@ function Class(ctor) {
         }
         return clas;
     };
-    for(var i = 1, l = arguments.length; i < l; i++) {
+    for(var i = ctor.init ? 0 : 1, l = arguments.length; i < l; i++) {
         arguments[i].extend(clas);
     }
     return clas;
