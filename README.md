@@ -16,7 +16,7 @@ neko.js - JavaScript classes for cats!
     var Animal = Class(function(name) { // the constructor
         this.name = name; // an instance variable
 
-    }, { // extending the class with some methods
+    }).extend({ // extending the class with some methods
         speak: function(words) { // a simple method
             console.log(words);    
         }
@@ -37,7 +37,7 @@ neko.js - JavaScript classes for cats!
         
         this.$list.push(this); // push this instance into the static list of Cat
     
-    }, Animal, {  // base classes
+    }, Animal).extend({  // base classes
         meow: function() {
             this.speak('Meow! My name is ' + this.name + '.'); // calling the inherited method
         },
