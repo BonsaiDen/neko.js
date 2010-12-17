@@ -31,30 +31,32 @@ function Class(ctor) {
             return object.apply(caller, arguments);
         };
     }
+    function is(type, obj) {
+        return Object.prototype.toString.call(obj).slice(8, -1) === type;
+    }
     
     var proto = {};
     clas.init = wrap(ctor);
-    clas.extend = function(exts) {
-        if (exts instanceof Function) return exts.extend(proto);
+    clas.extend = function(ext) {
+        if (is('Function', ext)) return ext.extend(proto);
         
-        for(var e in exts) {
-            if (!exts.hasOwnProperty(e)) continue;
+        for(var e in ext) {
+            if (!ext.hasOwnProperty(e)) continue;
             
-            var value = exts[e],
-                type = Object.prototype.toString.call(value).slice(8, -1);
-            
+            var val = ext[e];
             if (/^\$/.test(e)) {
-                proto[e] = type === 'Array' ? value.slice() : value;
-                if (type === 'Object') {
+                proto[e] = is('Array', val) ? val.slice() : val;
+                if (is('Object', val)) {
                     proto[e] = {};
-                    for(var f in value) {
-                        proto[e][f] = value[f];
+                    for(var f in val) {
+                        proto[e][f] = val[f];
                     }
                 }
-                clas[e] = clas.prototype[e] = type === 'Function' ? wrap(clas, value) : value;
+                clas[e] = clas.prototype[e] =
+						  is('Function', val) ? wrap(clas, val) : val;
             
-            } else if (type === 'Function') {
-                clas[e] = wrap(proto[e] = clas.prototype[e] = value);
+            } else if (is('Function', val)) {
+                clas[e] = wrap(proto[e] = clas.prototype[e] = val);
             }
         }
         return clas;
