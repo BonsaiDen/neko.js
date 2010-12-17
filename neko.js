@@ -34,15 +34,15 @@ function Class(ctor) {
     function is(type, obj) {
         return Object.prototype.toString.call(obj).slice(8, -1) === type;
     }
-     
+
     var proto = {};
     clas.init = wrap(ctor);
     clas.extend = function(ext) {
         if (is('Function', ext)) return ext.extend(proto);
-        
+
         for(var e in ext) {
             if (!ext.hasOwnProperty(e)) continue;
-            
+
             var val = ext[e];
             if (/^\$/.test(e)) {
                 proto[e] = is('Array', val) ? val.slice() : val;
@@ -54,7 +54,7 @@ function Class(ctor) {
                 }
                 clas[e] = clas.prototype[e] =
                           is('Function', val) ? wrap(clas, val) : val;
-            
+
             } else if (is('Function', val)) {
                 clas[e] = wrap(proto[e] = clas.prototype[e] = val);
             }

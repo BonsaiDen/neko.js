@@ -1,5 +1,5 @@
 // Neko.js Test Cases ----------------------------------------------------------
-// ----------------------------------------------------------------------------- 
+// -----------------------------------------------------------------------------
 var assert = require('assert');
 var Class = require('./neko').Class;
 
@@ -8,7 +8,7 @@ var isnot = assert.notEqual;
 
 
 // Plain vanilla Class ---------------------------------------------------------
-// ----------------------------------------------------------------------------- 
+// -----------------------------------------------------------------------------
 var Animal = Class(function(name) {
     this.name = name;
 
@@ -24,7 +24,7 @@ var Animal = Class(function(name) {
 });
 
 
-// Test a simple Class --------------------------------------------------------- 
+// Test a simple Class ---------------------------------------------------------
 var bee = new Animal('Maja');
 isnot(Animal.$info, undefined,
       'Class Animal should have a static method called $info');
@@ -38,7 +38,7 @@ isnot(bee.$info, undefined, 'bee should have a static method $info');
 
 
 // Class with static methods and properties ------------------------------------
-// ----------------------------------------------------------------------------- 
+// -----------------------------------------------------------------------------
 var configObject = {'foo': 42};
 var Balloon = Class(function(size, altitude) {
     this.size = size;
@@ -49,13 +49,13 @@ var Balloon = Class(function(size, altitude) {
     fly: function() {
         return this.altitude;
     },
-    
+
     invalidList: [], // invalid, class variables need to start with a $
-    
+
     $list: [],
-    
+
     $config:  {'color': 'blue', 'object': configObject},
-    
+
     $count: function() {
         return this.$list.length;
     }
@@ -91,7 +91,7 @@ equal(hotAirBalloon.size, 50,
 
 equal(hotAirBalloon.altitude, 128,
       'hotAirBalloon is at the wrong altitude');
-             
+
 equal(hotAirBalloon.fly(), 128,
       'hotAirBalloon.fly() tells the wrong altitude');
 
@@ -106,11 +106,11 @@ equal(hotAirBalloon.invalidList, undefined,
 
 
 // Single Inherited Class ------------------------------------------------------
-// ----------------------------------------------------------------------------- 
+// -----------------------------------------------------------------------------
 var Cat = Class(function(name, color) {
     Animal.init(this, name);
     this.color = color;
-               
+
 }, Animal).extend({
     meow: function() {
         return this.speak('My name is ' + this.name + ' and I\'m '
@@ -129,7 +129,7 @@ equal(kitty.meow(), 'My name is Meow and I\'m purple!',
 
 
 // Double Inherited Class ------------------------------------------------------
-// ----------------------------------------------------------------------------- 
+// -----------------------------------------------------------------------------
 var BalloonCat = Class(function(name, color, size, height) {
     Cat.init(this, name, color);
     Balloon.init(this, size, height);
@@ -176,7 +176,7 @@ equal(flyingCat.meow(),
 
 
 // Template Classes ------------------------------------------------------------
-// ----------------------------------------------------------------------------- 
+// -----------------------------------------------------------------------------
 var CuteThing = Class(function() {
     this.cuteThingsDone = 0;
 
@@ -204,7 +204,7 @@ var Kitten = Class(CuteThing, CuteLogger).extend({
 });
 
 
-// Test templates -------------------------------------------------------------- 
+// Test templates --------------------------------------------------------------
 var kitten = new Kitten();
 isnot(Kitten.cuteAction, undefined,
       'Class Kitten should inherit method cuteAction');
