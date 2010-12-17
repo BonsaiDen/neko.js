@@ -16,7 +16,7 @@ var Animal = Class(function(name) {
     speak: function(words) {
         return words;
     },
-    
+
     // static method of Animal
     $info: function(animal) {
         return animal.name;
@@ -27,17 +27,17 @@ var Animal = Class(function(name) {
 // Test a simple Class --------------------------------------------------------- 
 var bee = new Animal('Maja');
 isnot(Animal.$info, undefined,
-	  'Class Animal should have a static method called $info');
+      'Class Animal should have a static method called $info');
 
 equal(Animal.$info(bee), 'Maja',
-	  'Class Animal static method $info returned the wrong value');
+      'Class Animal static method $info returned the wrong value');
 
 equal(bee.name, 'Maja', 'bee has wrong name');
 equal(bee.speak('Willi!'), 'Willi!', 'bee said the wrong thing');
 isnot(bee.$info, undefined, 'bee should have a static method $info');
 
 
-// Class with static methods and properties ----------------------------------- 
+// Class with static methods and properties ------------------------------------
 // ----------------------------------------------------------------------------- 
 var configObject = {'foo': 42};
 var Balloon = Class(function(size, altitude) {
@@ -58,48 +58,48 @@ var Balloon = Class(function(size, altitude) {
     
     $count: function() {
         return this.$list.length;
-	}
+    }
 });
 
 
 // Test a class with static stuff ----------------------------------------------
 var hotAirBalloon = new Balloon(50, 128);
 isnot(Balloon.$count, undefined,
-	  'Class Balloon should have a static method $count');
+      'Class Balloon should have a static method $count');
 
 isnot(Balloon.$list, undefined,
-	  'Class Balloon should have a static property $list');
+      'Class Balloon should have a static property $list');
 
 equal(Balloon.invalidList, undefined,
-	  'Class Balloon should not have a property invalidList');
+      'Class Balloon should not have a property invalidList');
 
 equal(Balloon.$list.length, 1,
-	  'Static property $list of class Balloon should have a length of 1');
+      'Static property $list of class Balloon should have a length of 1');
 
 equal(Balloon.$count(), Balloon.$list.length,
-	  'Static method $count of class Balloon should return the length '
-	  + 'of the static property $list')
+      'Static method $count of class Balloon should return the length '
+      + 'of the static property $list');
 
 equal(Balloon.$config.color, 'blue',
-	  'Static property $conifg should be a shallow clone');
+      'Static property $conifg should be a shallow clone');
 
 equal(Balloon.$config.object, configObject,
-	  'Static property $config should be a shallow clone');
+      'Static property $config should be a shallow clone');
 
 equal(hotAirBalloon.size, 50,
-	  'hotAirBalloon has the wrong size');
+      'hotAirBalloon has the wrong size');
 
 equal(hotAirBalloon.altitude, 128,
-	  'hotAirBalloon is at the wrong altitude');
-			 
+      'hotAirBalloon is at the wrong altitude');
+             
 equal(hotAirBalloon.fly(), 128,
-	  'hotAirBalloon.fly() tells the wrong altitude');
+      'hotAirBalloon.fly() tells the wrong altitude');
 
 isnot(hotAirBalloon.$count, undefined,
-	  'hotAirBalloon should have a static method $count');
+      'hotAirBalloon should have a static method $count');
 
 isnot(hotAirBalloon.$list, undefined,
-	  'hotAirBalloon should have a static property $list');
+      'hotAirBalloon should have a static property $list');
 
 equal(hotAirBalloon.invalidList, undefined,
       'hotAirBalloon should not have a property invalidList');
@@ -110,11 +110,11 @@ equal(hotAirBalloon.invalidList, undefined,
 var Cat = Class(function(name, color) {
     Animal.init(this, name);
     this.color = color;
-
+               
 }, Animal).extend({
     meow: function() {
         return this.speak('My name is ' + this.name + ' and I\'m '
-			   + this.color + '!');
+                             + this.color + '!');
     }
 });
 
@@ -138,7 +138,7 @@ var BalloonCat = Class(function(name, color, size, height) {
 }, Cat, Balloon).extend({
     meow: function() {
         return Cat.meow(this) + ' I\'m currently flying at '
-			   + this.fly() + ' feet!';
+               + this.fly() + ' feet!';
     }
 });
 configObject.foo = 35;
@@ -148,27 +148,27 @@ Balloon.$config.color = 'red';
 // Test a double inheriting Class ----------------------------------------------
 var flyingCat = new BalloonCat('Toro', 'orange', 20, 70);
 isnot(BalloonCat.$list, undefined,
-	  'Class BalloonCat should have a static property $list');
-				
+      'Class BalloonCat should have a static property $list');
+
 isnot(BalloonCat.$count, undefined,
-	  'Class BalloonCat should have a static method $count');
+      'Class BalloonCat should have a static method $count');
 
 equal(BalloonCat.$list.length, 1,
-	  'Static property $list of class BalloonCat should have a length of 1');
+      'Static property $list of class BalloonCat should have a length of 1');
 
 equal(BalloonCat.$count(), 1,
-	  'Static method $count of class BalloonCat should return 1');
+      'Static method $count of class BalloonCat should return 1');
 
 equal(BalloonCat.$config.color, 'blue',
-	  'Static property $conifg should be a shallow clone');
+      'Static property $conifg should be a shallow clone');
 
 equal(BalloonCat.$config.object, configObject,
       'Static property $conifg should be a shallow clone');
-			 
+
 equal(flyingCat.name, 'Toro', 'flyingCat has the wrong name');
 equal(flyingCat.color, 'orange', 'flyingCat has the wrong color');
 isnot(flyingCat.$list, undefined,
-	  'flyingCat should have a static property $list');
+      'flyingCat should have a static property $list');
 
 equal(flyingCat.meow(),
       'My name is Toro and I\'m orange! I\'m currently flying at 70 feet!',
@@ -193,7 +193,7 @@ var CuteLogger = Class().extend({
     }
 });
 equal(CuteLogger.init instanceof Function, true,
-	  'Class CuteLogger should have a implicit default constructor');
+      'Class CuteLogger should have a implicit default constructor');
 
 
 // Just pass the class as the constructor
@@ -207,16 +207,16 @@ var Kitten = Class(CuteThing, CuteLogger).extend({
 // Test templates -------------------------------------------------------------- 
 var kitten = new Kitten();
 isnot(Kitten.cuteAction, undefined,
-	  'Class Kitten should inherit method cuteAction');
+      'Class Kitten should inherit method cuteAction');
 
 isnot(Kitten.$log, undefined,
-	  'Class Kitten should have a static method $log');
+      'Class Kitten should have a static method $log');
 
 isnot(Kitten.doAction, undefined,
-	  'Class Kitten should implement doAction');
+      'Class Kitten should implement doAction');
 
 equal(kitten.cuteAction(), 'Doing some cute kitten thing!',
-	  'kitten doAction returns the wrong value');
+      'kitten doAction returns the wrong value');
 
 equal(kitten.cuteThingsDone, 1,
       'kitten instance should have a cuteThingsDone count of 1');

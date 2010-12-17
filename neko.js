@@ -34,7 +34,7 @@ function Class(ctor) {
     function is(type, obj) {
         return Object.prototype.toString.call(obj).slice(8, -1) === type;
     }
-    
+     
     var proto = {};
     clas.init = wrap(ctor);
     clas.extend = function(ext) {
@@ -53,7 +53,7 @@ function Class(ctor) {
                     }
                 }
                 clas[e] = clas.prototype[e] =
-						  is('Function', val) ? wrap(clas, val) : val;
+                          is('Function', val) ? wrap(clas, val) : val;
             
             } else if (is('Function', val)) {
                 clas[e] = wrap(proto[e] = clas.prototype[e] = val);
