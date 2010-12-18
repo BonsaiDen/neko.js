@@ -36,6 +36,9 @@ equal(Animal.$info(bee), 'Maja',
 
 equal(bee.name, 'Maja', 'bee has wrong name');
 equal(bee.speak('Willi!'), 'Willi!', 'bee said the wrong thing');
+equal(Animal.speak(bee, 'Willi!'), 'Willi!',
+      'Unbound call to Animal.bee said the wrong thing');
+
 isnot(bee.$info, undefined, 'bee should have a static method $info');
 
 
@@ -124,6 +127,12 @@ var Cat = Class(function(name, color) {
 // Test a Inheriting Class -----------------------------------------------------
 var kitty = new Cat('Meow', 'purple');
 isnot(kitty.speak, undefined, 'kitty should have a speak method');
+equal(Cat.speak(kitty, 'Meow'), 'Meow',
+      'Unbound call to Cat.speak said the wrong thing');
+
+equal(Animal.speak(kitty, 'Meow'), 'Meow',
+      'Unbound call to Animal.speak said the wrong thing');
+
 equal(kitty.name, 'Meow', 'kitty has the wrong name');
 equal(kitty.color, 'purple', 'kitty has the wrong color');
 equal(kitty.meow(), 'My name is Meow and I\'m purple!',
@@ -202,7 +211,7 @@ equal(CuteLogger.$log('Test'), 'CuteLog: Test',
       'Static method $log of CuteLogger does not return the correct value');
 
 
-// Just pass the class as the constructor
+// Test passing a Class as the constructor -------------------------------------
 var Kitten = Class(CuteThing, CuteLogger, {
     doAction: function() {
         return 'Doing some cute kitten thing!';
