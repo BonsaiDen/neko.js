@@ -20,57 +20,73 @@
     THE SOFTWARE.
 */
 
-"use strict";
+(function() {
+    "use strict";
 
-function Class(ctor) {
-    ctor = ctor || function() {};
-    if (is('Object', ctor)) {
-        return Class(null, ctor);
-    }
     function is(type, obj) {
         return Object.prototype.toString.call(obj).slice(8, -1) === type;
     }
+
+    function copy(val) {
+        if (is('Object', val)) {
+            var obj = {};
+            for(var f in val) {
+                obj[f] = val[f];
+            }
+            return obj;
+
+        } else {
+            return is('Array', val) ? val.slice() : val;
+        }
+    }
+
     function wrap(caller, object) {
-        object = object || clas.call;
+        object = object || Function.call;
         return function() {
             return object.apply(caller, arguments);
         };
     }
 
-    var proto = {};
-    function clas() {
-        ctor.apply(this, arguments);
-    }
-    clas.init = wrap(ctor);
-    clas.extend = function(ext) {
-        if (is('Function', ext)) return ext.extend(proto);
+    function Class(ctor) {
+        ctor = ctor || function() {};
+        if (is('Object', ctor)) {
+            return Class(null, ctor);
+        }
 
-        for(var e in ext) {
-            if (!ext.hasOwnProperty(e)) continue;
+        function clas() {
+            ctor.apply(this, arguments);
+        }
 
-            var val = ext[e];
-            if (/^\$/.test(e)) {
-                proto[e] = is('Array', val) ? val.slice() : val;
-                if (is('Object', val)) {
-                    proto[e] = {};
-                    for(var f in val) {
-                        proto[e][f] = val[f];
-                    }
+        var proto = {};
+        clas.init = wrap(ctor);
+        clas.extend = function(ext) {
+            if (is('Function', ext)) return ext.extend(proto);
+
+            for(var e in ext) {
+                if (!ext.hasOwnProperty(e)) continue;
+
+                var val = ext[e];
+                if (/^\$/.test(e)) {
+                    proto[e] = copy(val);
+                    clas[e] = clas.prototype[e] = is('Function', val)
+                                                      ? wrap(clas, val) : val;
+
+                } else if (is('Function', val)) {
+                    clas[e] = wrap(proto[e] = clas.prototype[e] = val);
                 }
-                clas[e] = clas.prototype[e] =
-                          is('Function', val) ? wrap(clas, val) : val;
-
-            } else if (is('Function', val)) {
-                clas[e] = wrap(proto[e] = clas.prototype[e] = val);
             }
+            return clas;
+        };
+
+        for(var i = ctor.hasOwnProperty('init') ? 0 : 1,
+                l = arguments.length; i < l; i++) {
+
+            var arg = arguments[i];
+            is('Object', arg) ? clas.extend(arg) : arg.extend(clas);
         }
         return clas;
-    };
-    for(var i = ctor.init ? 0 : 1, l = arguments.length; i < l; i++) {
-        var arg = arguments[i];
-        is('Object', arg) ? clas.extend(arg) : arg.extend(clas);
     }
-    return clas;
-}
-typeof window === 'undefined' ? exports.Class = Class : null;
+
+    (typeof window === 'undefined' ? exports : window).Class = Class;
+})();
 
