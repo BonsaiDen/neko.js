@@ -20,10 +20,15 @@
     THE SOFTWARE.
 */
 
+"use strict";
+
 function Class(ctor) {
     ctor = ctor || function() {};
-    function clas() {
-        ctor.apply(this, arguments);
+    if (is('Object', ctor)) {
+        return Class(null, ctor);
+    }
+    function is(type, obj) {
+        return Object.prototype.toString.call(obj).slice(8, -1) === type;
     }
     function wrap(caller, object) {
         object = object || clas.call;
@@ -31,11 +36,11 @@ function Class(ctor) {
             return object.apply(caller, arguments);
         };
     }
-    function is(type, obj) {
-        return Object.prototype.toString.call(obj).slice(8, -1) === type;
-    }
 
     var proto = {};
+    function clas() {
+        ctor.apply(this, arguments);
+    }
     clas.init = wrap(ctor);
     clas.extend = function(ext) {
         if (is('Function', ext)) return ext.extend(proto);
@@ -62,7 +67,8 @@ function Class(ctor) {
         return clas;
     };
     for(var i = ctor.init ? 0 : 1, l = arguments.length; i < l; i++) {
-        arguments[i].extend(clas);
+        var arg = arguments[i];
+        is('Object', arg) ? clas.extend(arg) : arg.extend(clas);
     }
     return clas;
 }

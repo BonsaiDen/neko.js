@@ -9,6 +9,12 @@ neko.js - JavaScript classes for cats!
  - Ability to call unbound methods
  - Passing Classes as constructors
 
+**Syntax**
+
+    Class (constructor, [base1[, base2[, ... baseN]],], [methods])
+    Class (constructor, [base1[, base2[, ... baseN]],]).extend(methods)
+    Class ().extend(methods)
+    Class (methods)
 
 **Creating some Classes**
 
@@ -16,43 +22,43 @@ neko.js - JavaScript classes for cats!
     var Animal = Class(function(name) { // the constructor
         this.name = name; // an instance variable
 
-    }).extend({ // extending the class with some methods
+    }, { // extending the class with some methods
         speak: function(words) { // a simple method
-            console.log(words);    
+            console.log(words);
         }
     });
-    
-    
+
+
     // Let's create a class called "Cat" that inherits from Animal
     var Cat = Class(function(name, color) {
-        
+
         Animal.init(this, name); // call Animals constructor, basically super()
         this.color = color;
-        
+
         // private variable and a getter
         var fur = 'soft';
         this.furType = function() {
             return fur;
         }
-        
+
         this.$list.push(this); // push this instance into the static list of Cat
-    
-    }, Animal).extend({  // base classes
+
+    }, Animal, {  // base classes
         meow: function() {
             this.speak('Meow! My name is ' + this.name + '.'); // calling the inherited method
         },
-        
+
         getColor: function() {
             return this.color;
         },
-        
+
         $list: [], // let the Cat class keep track of the cats, with a static property
                    // static properties are shallow copies per class
-        
+
         $info: function(cat) { // static method of Cat, note the $ prefix
             return {name: cat.name, color: cat.color, fur: cat.furType()};
         },
-        
+
         $listCats: function() {
             return this.$list; // this inside static methods refers to the class
         }
@@ -84,30 +90,30 @@ neko.js - JavaScript classes for cats!
     // Creating some kind of a template
     var CuteThing = Class(function() {
         this.cuteThingsDone = 0;
-    
-    }).extend({
+
+    }, {
         cuteAction: function() {
             this.cuteThingsDone++;
             return this.doAction(); // doAction is abstract
         }
     });
-    
+
     // Just pass the CuteThing class as the constructor
-    var Kitten = Class(CuteThing).extend({
+    var Kitten = Class(CuteThing, {
         doAction: function() {
             return 'Doing some cute kitten thing!';
         }
     });
-    
-    var Puppy = Class(CuteThing).extend({
+
+    var Puppy = Class(CuteThing, {
         doAction: function() {
             return 'Doing some cute puppy thing!';
         }
     });
-    
+
     > new Kitten().cuteAction()
     'Doing some cute kitten thing!'
-    
+
     > new Puppy().cuteAction()
     'Doing some cute puppy thing!'
 

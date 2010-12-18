@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 // Neko.js Test Cases ----------------------------------------------------------
 // -----------------------------------------------------------------------------
 var assert = require('assert');
@@ -12,7 +14,7 @@ var isnot = assert.notEqual;
 var Animal = Class(function(name) {
     this.name = name;
 
-}).extend({
+}, {
     speak: function(words) {
         return words;
     },
@@ -45,7 +47,7 @@ var Balloon = Class(function(size, altitude) {
     this.altitude = altitude;
     this.$list.push(this);
 
-}).extend({
+}, {
     fly: function() {
         return this.altitude;
     },
@@ -111,15 +113,15 @@ var Cat = Class(function(name, color) {
     Animal.init(this, name);
     this.color = color;
 
-}, Animal).extend({
+}, Animal, {
     meow: function() {
         return this.speak('My name is ' + this.name + ' and I\'m '
-                             + this.color + '!');
+                          + this.color + '!');
     }
 });
 
 
-// Test a inheriting Class -----------------------------------------------------
+// Test a Inheriting Class -----------------------------------------------------
 var kitty = new Cat('Meow', 'purple');
 isnot(kitty.speak, undefined, 'kitty should have a speak method');
 equal(kitty.name, 'Meow', 'kitty has the wrong name');
@@ -135,7 +137,7 @@ var BalloonCat = Class(function(name, color, size, height) {
     Balloon.init(this, size, height);
     this.color = color;
 
-}, Cat, Balloon).extend({
+}, Cat, Balloon, {
     meow: function() {
         return Cat.meow(this) + ' I\'m currently flying at '
                + this.fly() + ' feet!';
@@ -145,7 +147,7 @@ configObject.foo = 35;
 Balloon.$config.color = 'red';
 
 
-// Test a double inheriting Class ----------------------------------------------
+// Test a Double Inheriting Class ----------------------------------------------
 var flyingCat = new BalloonCat('Toro', 'orange', 20, 70);
 isnot(BalloonCat.$list, undefined,
       'Class BalloonCat should have a static property $list');
@@ -180,31 +182,35 @@ equal(flyingCat.meow(),
 var CuteThing = Class(function() {
     this.cuteThingsDone = 0;
 
-}).extend({
+}, {
     cuteAction: function() {
         this.cuteThingsDone++;
         return this.doAction(); // abstract
     }
 });
 
-var CuteLogger = Class().extend({
+var CuteLogger = Class({
     $log: function(str) {
-        console.log('CuteLog: ' + str);
+        return 'CuteLog: ' + str;
     }
 });
+
 equal(CuteLogger.init instanceof Function, true,
       'Class CuteLogger should have a implicit default constructor');
 
+equal(CuteLogger.$log('Test'), 'CuteLog: Test',
+      'Static method $log of CuteLogger does not return the correct value');
+
 
 // Just pass the class as the constructor
-var Kitten = Class(CuteThing, CuteLogger).extend({
+var Kitten = Class(CuteThing, CuteLogger, {
     doAction: function() {
         return 'Doing some cute kitten thing!';
     }
 });
 
 
-// Test templates --------------------------------------------------------------
+// Test Templates --------------------------------------------------------------
 var kitten = new Kitten();
 isnot(Kitten.cuteAction, undefined,
       'Class Kitten should inherit method cuteAction');
