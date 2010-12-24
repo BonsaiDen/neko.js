@@ -31,7 +31,9 @@
         if (is('Object', val)) {
             var obj = {};
             for (var f in val) {
-                obj[f] = val[f];
+                if (val.hasOwnProperty(f)) {
+                    obj[f] = val[f];
+                }
             }
             return obj;
 
