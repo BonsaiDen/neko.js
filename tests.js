@@ -236,5 +236,25 @@ equal(kitten.cuteAction(), 'Doing some cute kitten thing!',
 equal(kitten.cuteThingsDone, 1,
       'kitten instance should have a cuteThingsDone count of 1');
 
+
+// Newless Constructors --------------------------------------------------------
+// -----------------------------------------------------------------------------
+var Dog = Class(function(name) {
+    this.name = name;
+
+}, {
+    speak: function(text) {
+        return text;
+    }
+});
+
+var puppy = Dog('Foo');
+equal(puppy.speak('Wuff'), 'Wuff',
+      'puppy does not say the correct things');
+
+equal(puppy.name, 'Foo',
+      'puppy does not have the correct name');
+
+// Done Message ---------------------------------------------------------------
 console.log('PASSED ALL TESTS');
 

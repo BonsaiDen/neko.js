@@ -55,8 +55,13 @@
             return Class(null, ctor);
         }
 
-        function clas() {
-            ctor.apply(this, arguments);
+        function clas(args) {
+            if (is('Object', this)) {
+                ctor.apply(this, is('Arguments', args) ? args : arguments);
+
+            } else {
+                return new clas(arguments);
+            }
         }
 
         var proto = {};
