@@ -34,12 +34,17 @@ isnot(Animal.$info, undefined,
 equal(Animal.$info(bee), 'Maja',
       'Class Animal static method $info returned the wrong value');
 
-equal(bee.name, 'Maja', 'bee has wrong name');
-equal(bee.speak('Willi!'), 'Willi!', 'bee said the wrong thing');
+equal(bee.name, 'Maja',
+      'bee has wrong name');
+
+equal(bee.speak('Willi!'), 'Willi!',
+      'bee said the wrong thing');
+
 equal(Animal.speak(bee, 'Willi!'), 'Willi!',
       'Unbound call to Animal.bee said the wrong thing');
 
-isnot(bee.$info, undefined, 'bee should have a static method $info');
+isnot(bee.$info, undefined,
+      'bee should have a static method $info');
 
 
 // Class with static methods and properties ------------------------------------
@@ -136,7 +141,7 @@ equal(Animal.speak(kitty, 'Meow'), 'Meow',
 equal(kitty.name, 'Meow', 'kitty has the wrong name');
 equal(kitty.color, 'purple', 'kitty has the wrong color');
 equal(kitty.meow(), 'My name is Meow and I\'m purple!',
-                    'kitty.meow() says the wrong things');
+      'kitty.meow() says the wrong things');
 
 
 // Double Inherited Class ------------------------------------------------------
