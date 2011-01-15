@@ -1,7 +1,12 @@
-neko.js - JavaScript classes for cats!
-======================================
+neko.js - JavaScript made by Cats
+=================================
 
-**neko.js Features**
+Neko.js provides classic classes for JavaScript. 
+
+It works both in browsers (IE6+) and all versions of Node.js.
+
+Features
+--------
 
  - Multiple inheritance
  - Static methods and properties
@@ -9,7 +14,9 @@ neko.js - JavaScript classes for cats!
  - Ability to call unbound methods
  - Passing Classes as constructors
 
-**Syntax**
+
+Syntax
+------
 
     Class (constructor, [base1[, base2[, ... baseN]],], [methods])
     Class (constructor, [base1[, base2[, ... baseN]],]).extend(methods)
