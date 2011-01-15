@@ -1,6 +1,6 @@
 {
     "name": "neko",
-    "version": "1.0.9",
+    "version": "1.0.10",
     "description": "JavaScript classes for cats!",
     "homepage": "https://github.com/BonsaiDen/neko.js",
     "author": "Ivo Wetzel <ivo.wetzel@googlemail.com>",
@@ -13,7 +13,7 @@
     ],
     
     "engines" : {
-        "node": ">=0.1.9"
+        "node": ">=0.1.5"
     },
     
     "main": "neko",
