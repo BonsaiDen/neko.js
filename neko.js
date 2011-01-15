@@ -67,10 +67,14 @@
         var proto = {};
         clas.init = wrap(ctor);
         clas.extend = function(ext) {
-            if (is('Function', ext)) return ext.extend(proto);
+            if (is('Function', ext)) {
+                return ext.extend(proto);
+            }
 
             for (var e in ext) {
-                if (!ext.hasOwnProperty(e)) continue;
+                if (!ext.hasOwnProperty(e)) {
+                    continue;
+                }
 
                 var val = ext[e], func = is('Function', val);
                 if (/^\$/.test(e)) {
