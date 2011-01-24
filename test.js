@@ -1,4 +1,4 @@
-var Class = require('neko').Class;
+var Class = require('./neko').Class;
 
 function is(type, obj) {
     return Object.prototype.toString.call(obj).slice(8, -1) === type;
