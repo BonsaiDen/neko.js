@@ -1,7 +1,8 @@
-neko.js - JavaScript made by Cats
-=================================
+neko.js - Lightweight JavaScript Classes
+========================================
 
-Neko.js provides classic classes for JavaScript. 
+Neko.js provides classical inheritance for JavaScript, it does so in a
+lightweight manner with nearly no overhead when on instantiation.
 
 It works both in browsers (IE6+) and all versions of Node.js.
 
@@ -20,7 +21,6 @@ Syntax
 
     Class (constructor, [base1[, base2[, ... baseN]],], [methods])
     Class (constructor, [base1[, base2[, ... baseN]],]).extend(methods)
-    Class ().extend(methods)
     Class (methods)
 
 **Creating some Classes**

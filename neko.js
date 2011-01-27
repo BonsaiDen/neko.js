@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2010 Ivo Wetzel.
+   Copyright (c) 2010-2011 Ivo Wetzel.
 
    Permission is hereby granted, free of charge, to any person obtaining a copy
    of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,90 @@
 (function() {
     'use strict';
 
-    function is(type, obj) {
-        return Object.prototype.toString.call(obj).slice(8, -1) === type;
+    // Class (constructor, [base1[, base2[, ... baseN]],], [methods])
+    // Class (constructor, [base1[, base2[, ... baseN]],]);
+    // Class (methods)
+    function Class(ctor) {
+        if (is('Object', ctor)) {
+            // no constructor function passed
+            return Class(null, ctor);
+
+        } else {
+            return base(arguments, ctor || function() {});
+        }
     }
 
-    function copy(val) {
+    var global = this;
+    function base(args, ctor) {
+        var plain = false;
+
+        // Instance constructor
+        function clas() {
+            if (this !== global) {
+                plain ? (plain = false) : ctor.apply(this, arguments);
+                return this;
+
+            } else {
+                // Case of missing new keyword
+                plain = true;
+                return clas.apply(new clas(), arguments);
+            }
+        }
+
+        var properties = {};
+        clas.init = bind(ctor);
+        clas.extend = function(obj) {
+            if (is('Function', obj)) {
+                // Extend the class that wants to inherit
+                if (obj.hasOwnProperty('extend')) {
+                    return obj.extend(properties);
+                }
+
+            } else {
+                for(var i in obj) {
+                    if (obj.hasOwnProperty(i)) {
+                        extend(clas, properties, obj, i);
+                    }
+                }
+            }
+            return clas;
+        };
+
+        // Extend and inherit
+        var i = is('Function', ctor) && ctor.hasOwnProperty('init') ? 0 : 1;
+        for(var l = args.length; i < l; i++) {
+            if (is('Object', args[i])) {
+                clas.extend(args[i]);
+
+            } else {
+                // We're inheriting, so we need access to the other class's
+                // 'properties' object, therefore, call that class which then
+                // calls the extend method of this class and passes its
+                // 'properties' object
+                args[i].extend(clas);
+            }
+        }
+        return clas;
+    }
+
+    function extend(clas, properties, obj, i) {
+        var val = obj[i], func = is('Function', val);
+        if (/^\$/.test(i)) {
+
+            // Statics
+            clas[i] = clas.prototype[i] = func ? bind(clas, val) : val;
+            properties[i] = clone(val);
+
+        } else if (func) {
+            clas[i] = bind(val);
+            properties[i] = clas.prototype[i] = val;
+        }
+    }
+
+    function clone(val) {
         if (is('Object', val)) {
             var obj = {};
-            for (var f in val) {
+            for(var f in val) {
                 if (val.hasOwnProperty(f)) {
                     obj[f] = val[f];
                 }
@@ -42,59 +118,15 @@
         }
     }
 
-    function wrap(caller, obj) {
+    function bind(caller, obj) {
         obj = obj || Function.call;
         return function() {
             return obj.apply(caller, arguments);
         };
     }
 
-    function Class(ctor) {
-        ctor = ctor || function() {};
-        if (is('Object', ctor)) {
-            return Class(null, ctor);
-        }
-
-        function clas(args) {
-            if (is('Object', this)) {
-                ctor.apply(this, is('Arguments', args) ? args : arguments);
-
-            } else {
-                return new clas(arguments);
-            }
-        }
-
-        var proto = {};
-        clas.init = wrap(ctor);
-        clas.extend = function(ext) {
-            if (is('Function', ext)) {
-                return ext.extend(proto);
-            }
-
-            for (var e in ext) {
-                if (!ext.hasOwnProperty(e)) {
-                    continue;
-                }
-
-                var val = ext[e], func = is('Function', val);
-                if (/^\$/.test(e)) {
-                    proto[e] = copy(val);
-                    clas[e] = clas.prototype[e] = func ? wrap(clas, val) : val;
-
-                } else if (func) {
-                    clas[e] = wrap(proto[e] = clas.prototype[e] = val);
-                }
-            }
-            return clas;
-        };
-
-        for (var i = ctor.hasOwnProperty('init') ? 0 : 1,
-                 l = arguments.length; i < l; i++) {
-
-            var arg = arguments[i];
-            is('Object', arg) ? clas.extend(arg) : arg.extend(clas);
-        }
-        return clas;
+    function is(type, obj) {
+        return Object.prototype.toString.call(obj).slice(8, -1) === type;
     }
 
     (typeof window === 'undefined' ? exports : window).Class = Class;

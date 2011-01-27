@@ -1,4 +1,4 @@
-var Class = require('neko').Class;
+var Class = require('./neko').Class;
 
 function is(type, obj) {
     return Object.prototype.toString.call(obj).slice(8, -1) === type;
@@ -19,8 +19,10 @@ exports.testClassCreation = function(test) {
 };
 
 
-exports.testConstructors = function(test) {
+exports.testClassConstruction = function(test) {
+    var count = 0;
     var Dog = Class(function(name) {
+        count++;
         this.name = name;
 
     }, {
@@ -28,17 +30,24 @@ exports.testConstructors = function(test) {
             return text;
         }
     });
-    var puppy1 = new Dog('Foo');
-    var puppy2 = Dog('Foo');
+    test.expect(8);
 
-    test.expect(6);
+    var puppy1 = new Dog('Foo');
+    test.equal(count, 1, 'constructor should only get called once');
+
     test.ok(is('Object', puppy1), 'new constructor should return instance');
     test.equal(puppy1.name, 'Foo', 'new ctor instance should have correct name');
     test.equal(puppy1.speak('wau'), 'wau',
                'new ctor instance method should work');
 
+    count = 0;
+    var puppy2 = Dog('Foo');
+    test.equal(count, 1, 'constructor should only get called once');
+
     test.ok(is('Object', puppy2), 'plain constructor should return instance');
-    test.equal(puppy2.name, 'Foo', 'plain ctor instance should have correct name');
+    test.equal(puppy2.name, 'Foo',
+               'plain ctor instance should have correct name');
+
     test.equal(puppy2.speak('wau'), 'wau',
               'plain ctor instance method should work');
 
@@ -183,7 +192,8 @@ exports.testMultipleInheritance = function(test) {
                'instance should have correct color property value');
 
     test.equal(flyingCat.meow(),
-               'My name is Toro and I\'m orange. I\'m currently flying at 70 feet!',
+               'My name is Toro and I\'m orange.'
+               + ' I\'m currently flying at 70 feet!',
                'instance method should return the correct value');
 
     test.done();
