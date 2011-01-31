@@ -1,4 +1,3 @@
-
 // Make sure it works in the HTML file
 if (typeof window === 'undefined') {
     var Class = require('./../lib/neko').Class;
@@ -10,6 +9,7 @@ if (typeof window === 'undefined') {
 function is(type, obj) {
     return Object.prototype.toString.call(obj).slice(8, -1) === type;
 }
+
 
 // Neko.js Tests ----------------------------------------------------------------
 // ------------------------------------------------------------------------------
