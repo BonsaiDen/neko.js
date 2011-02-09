@@ -313,7 +313,10 @@ exports.testTemplates = function(test) {
     });
     var sub = new Sub();
 
-    test.expect(5);
+    test.expect(6);
+    test.equal(sub.thingsDone, 0,
+                'instance should have initiliazed thingsDone');
+
     test.ok(is('Function', Sub.action),
                 'class should inherit method');
 
@@ -327,7 +330,7 @@ exports.testTemplates = function(test) {
                 'method should call and return implemented method');
 
     test.equal(sub.thingsDone, 1,
-                'instance should have correct count of things done');
+                'instance should have correct count of thingsDone');
 
     test.done();
 };
