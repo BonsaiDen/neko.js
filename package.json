@@ -1,6 +1,6 @@
 {
     "name": "neko",
-    "version": "1.1.1",
+    "version": "1.1.2",
     "description": "Lightweight JavaScript Classes.",
     "homepage": "https://github.com/BonsaiDen/neko.js",
     "author": "Ivo Wetzel <ivo.wetzel@googlemail.com>",
@@ -8,7 +8,7 @@
     "keywords": [
         "classes",
         "class",
-        "oop",
+        "oop"
     ],
     
     "engines" : {
